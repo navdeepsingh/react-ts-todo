@@ -1,20 +1,53 @@
 import React from 'react'
 import './App.css'
 
+// Types
 interface ITodo {
   id: number
   text: undefined | string
   done: boolean
 }
 
+// Custom Hook
+function useLocalStorage<T>(key: string, defaultValue: T) {
+  const [state, setState] = React.useState<T>(() => {
+    const valueInLocalStorage = window.localStorage.getItem(key)
+    if (valueInLocalStorage) {
+      return JSON.parse(valueInLocalStorage)
+    }
+    return typeof defaultValue === 'function' ? defaultValue() : defaultValue
+  })
+
+  const prevKeyRef = React.useRef(key)
+
+  React.useEffect(() => {
+    const prevKey = prevKeyRef.current
+    if (prevKey !== key) {
+      window.localStorage.removeItem(prevKey)
+    }
+    prevKeyRef.current = key
+    window.localStorage.setItem(key, JSON.stringify(state))
+  }, [key, state])
+
+  return [state, setState]
+}
+
 const Todo = () => {
-  const [todos, setTodos] = React.useState<ITodo[]>([])
+  const initialState = [
+    {
+      id: 1,
+      text: 'Dummy Text',
+      done: false,
+    },
+  ]
+  //const [todos, setTodos] = React.useState<ITodo[]>(initialState)
+  const [todos, setTodos] = useLocalStorage('todos', initialState)
   const todoRef = React.useRef<HTMLInputElement | null>(null)
 
   const handleSubmit = (e: React.SyntheticEvent): void => {
     e.preventDefault()
-    
-    const newTodos = todos.slice() // Copy
+
+    const newTodos = [...todos] // Copy
     newTodos.push({
       id: newTodos.length + 1,
       text: todoRef.current?.value,

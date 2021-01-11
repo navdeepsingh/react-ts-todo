@@ -9,6 +9,7 @@ This project was bootstrapped with
 - [ ] Add localStorage
 - [ ] Lazy Initialization
 - [ ] Flexible localStorage with custom hook
+- [ ] Unit Testing
 
 ## Available Scripts
 
