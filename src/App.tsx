@@ -41,7 +41,7 @@ const Todo = () => {
     },
   ]
   //const [todos, setTodos] = React.useState<ITodo[]>(initialState)
-  const [todos, setTodos] = useLocalStorage('todos', initialState)
+  const [todos, setTodos] = useLocalStorage<ITodo[]>('todos', initialState)
   const todoRef = React.useRef<HTMLInputElement | null>(null)
 
   const handleSubmit = (e: React.SyntheticEvent): void => {
