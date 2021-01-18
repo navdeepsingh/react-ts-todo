@@ -9,7 +9,10 @@ interface ITodo {
 }
 
 // Custom Hook
-function useLocalStorage<T>(key: string, defaultValue: T) {
+function useLocalStorage<T>(
+  key: string,
+  defaultValue: T,
+): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [state, setState] = React.useState<T>(() => {
     const valueInLocalStorage = window.localStorage.getItem(key)
     if (valueInLocalStorage) {
@@ -40,12 +43,13 @@ const Todo = () => {
       done: false,
     },
   ]
-  //const [todos, setTodos] = React.useState<ITodo[]>(initialState)
+
   const [todos, setTodos] = useLocalStorage<ITodo[]>('todos', initialState)
   const todoRef = React.useRef<HTMLInputElement | null>(null)
 
   const handleSubmit = (e: React.SyntheticEvent): void => {
     e.preventDefault()
+    console.log(todos)
 
     const newTodos = [...todos] // Copy
     newTodos.push({
